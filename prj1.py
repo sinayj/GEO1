@@ -6,6 +6,55 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 #import descartes
 import pyodbc
+import numpy as np
+import sys
+from copy import copy
+from tkinter import *
+import tkinter as tk
+from tkinter import ttk
+
+#-------------------------making the window------------------------
+
+my_window=Tk()
+my_canvas=Canvas(my_window, width=300, height=300,background='white')
+my_canvas.grid(row=0, column=0)
+
+
+# -------------function run_query()---------called by button 1--------
+
+
+# (result1, result2) = choices.get(key, ('default1', 'default2'))
+
+def run_query():
+    variable = my_combobox.get()
+    (result1, result2) = choices.get(variable, ('default1', 'default2'))
+    print(result1)
+    print(result2)
+
+# ----------------------combo box------------------------
+
+
+deases_lst = ['deases1', 'deases2', 'deases3', 'deases4', 'deases5', 'deases6'
+              , 'deases7', 'deases8', 'deases9', 'deases10', 'deases11', 'deases12'
+              , 'deases13', 'deases14', 'deases15', 'deases16', 'deases17', 'deases18']
+
+choices = {'deases1': (1, 1399), 'deases2': (140, 2399), 'deases3': (240, 2799),
+           'deases4': (280, 2899),'deases5': (290, 3199),'deases6': (320, 3599),
+           'deases7': (360, 3899),'deases8': (390, 4599),'deases9': (460, 5199),
+           'deases10': (520, 5799),'deases11': (580, 6299),'deases12': (630, 6799),
+           'deases13': (680, 7099),'deases14': (710, 7399),'deases15': (740, 7599),
+           'deases16': (760, 7799),'deases17': (780, 7999),'deases18': (800, 9999)
+           }
+
+my_str_var = tk.StringVar()
+my_combobox = ttk.Combobox(my_window, textvariable=my_str_var, values=deases_lst)
+my_combobox.grid(row=0, column=0)
+
+# ----------------------button 1------------------------
+
+button1 = ttk.Button(my_window, text="Show Query Results",
+                     command=lambda: run_query())
+button1.grid(row=1, column=0)
 
 #---------------------------------------
 
@@ -15,11 +64,11 @@ cursor = conn.cursor()
 # ------------------------SQL command--------------------------------------
 #example inputs to test the query:
 a_v_min = "V140"
-a_v_max = "V2399"
+a_v_max = "V230"
 a_e_min = "E140"
-a_e_max = "E2399"
+a_e_max = "E230"
 a_min = 140
-a_max = 2399
+a_max = 230
 
 sql_command = '''SELECT [FIPS County Code Table].[County Name], [WSU_OP_Diagnosis].[DIAG]  FROM 
 (
@@ -62,12 +111,13 @@ ORDER BY [FIPS County Code Table].[County Name]; '''
 
 
 
-#sql_command = '''SELECT [FIPS County Code Table].[County Name] FROM WSU_OP_Diagnosis;'''
-cursor.execute(sql_command, (a_v_min, a_v_max, a_e_min, a_e_max, a_min, a_max))
+#------for the sake of time saving during test running, i comment this part for now:
 
-for row in cursor.fetchall():
-    print(row)
-#-------------------------------
+#cursor.execute(sql_command, (a_v_min, a_v_max, a_e_min, a_e_max, a_min, a_max))
+
+#for row in cursor.fetchall():
+#    print(row)
+#--------------------------------------------------------
 gdf=gpd.read_file('GU_CountyOrEquivalent.shp')
 df = pd.DataFrame(gdf)
 df_seg=pd.read_csv("seg.csv")
@@ -95,3 +145,8 @@ print(merge_df[['County_Nam','Segment']])
 seg2.to_csv('seg2_out.csv',encoding='utf-8')
 #new_df.to_csv('new-df.csv',encoding='utf-8')
 print(new_df.head())
+
+
+#----------------------running ----------------------
+
+my_window.mainloop()
