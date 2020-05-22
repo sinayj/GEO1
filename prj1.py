@@ -56,7 +56,7 @@ button1 = ttk.Button(my_window, text="Show Query Results",
                      command=lambda: run_query())
 button1.grid(row=1, column=0)
 
-#---------------------------------------
+#----------------------DB Start-----------------
 
 conn = pyodbc.connect(r'Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=D:/WSU FY2012 OP.mdb;')
 cursor = conn.cursor()
@@ -117,7 +117,7 @@ ORDER BY [FIPS County Code Table].[County Name]; '''
 
 #for row in cursor.fetchall():
 #    print(row)
-#--------------------------------------------------------
+#-------------------------DB END -------------------------------
 gdf=gpd.read_file('GU_CountyOrEquivalent.shp')
 df = pd.DataFrame(gdf)
 df_seg=pd.read_csv("seg.csv")
